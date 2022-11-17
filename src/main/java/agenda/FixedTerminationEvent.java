@@ -60,11 +60,11 @@ public class FixedTerminationEvent extends RepetitiveEvent {
      */
     public LocalDate getTerminationDate() {
         if(terminationInclusive!=null) {
-            return terminationInclusive;
+            return terminationInclusive.atStartOfDay().toLocalDate();
         }
         else {
             LocalDate dateFin=getStart().toLocalDate().plus(numberOfOccurrences-1,getFrequency());
-            return dateFin;
+            return dateFin.atStartOfDay().toLocalDate();
         }
 
     }
@@ -87,19 +87,20 @@ public class FixedTerminationEvent extends RepetitiveEvent {
     @Override
     public boolean isInDay(LocalDate aDay) {
         boolean isInDay;
-        LocalDateTime dateDoccurence=getStart();
+        LocalDate dateDoccurence=getStart().toLocalDate();
 
         do {
-            if (super.dateExceptions.contains(aDay)) {isInDay=false;
+            if (super.dateExceptions.contains(aDay)) {
+                isInDay=false;
                 break;}
 
 
-            LocalDateTime debut=dateDoccurence;
-            LocalDateTime fin = debut.plusDays(super.getDuration().toDays());
-            isInDay = ((aDay.isEqual(ChronoLocalDate.from(debut)))||(aDay.isEqual(ChronoLocalDate.from(fin)))) || (aDay.isAfter(ChronoLocalDate.from(debut)) && aDay.isBefore(ChronoLocalDate.from(fin)));
+            LocalDate debut=dateDoccurence;
+            LocalDate fin = debut.plusDays(super.getDuration().toDays());
+            isInDay = ((aDay.isEqual(debut))||(aDay.isEqual(fin))) || (aDay.isAfter(debut) && aDay.isBefore(fin));
+            if (isInDay) break;
             dateDoccurence= dateDoccurence.plusDays(getFrequency().getDuration().toDays());
-
-
+            System.out.println(ChronoUnit.DAYS.between (dateDoccurence,getTerminationDate()));
 
 
         }
