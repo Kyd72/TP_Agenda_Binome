@@ -100,7 +100,7 @@ public class FixedTerminationEvent extends RepetitiveEvent {
             isInDay = ((aDay.isEqual(debut))||(aDay.isEqual(fin))) || (aDay.isAfter(debut) && aDay.isBefore(fin));
             if (isInDay) break;
             dateDoccurence= dateDoccurence.plusDays(getFrequency().getDuration().toDays());
-            System.out.println(ChronoUnit.DAYS.between (dateDoccurence,getTerminationDate()));
+
 
 
         }
